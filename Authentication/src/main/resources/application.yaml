@@ -1,3 +1,11 @@
 server:
   servlet:
     context-path: /authentication-app
+
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: true
+        web-allow-others: true

@@ -3,6 +3,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController(value = "applicationInfoController")
 @RequestMapping(path = "info")
 public class ApplicationInfoController {
@@ -20,5 +22,9 @@ public class ApplicationInfoController {
     @GetMapping(path = "/admin/ping")
     public String adminPing(){
         return "Ok admins !";
+    }
+    @GetMapping("/principal")
+    public Principal retrievePrincipal(Principal principal) {
+        return principal;
     }
 }
