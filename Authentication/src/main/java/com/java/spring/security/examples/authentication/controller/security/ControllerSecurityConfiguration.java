@@ -57,14 +57,6 @@ public class ControllerSecurityConfiguration {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
         authBuilder.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(User.withUsername("guest")
-                        .password(
-                                passwordEncoder().encode("guest"))
-                        .roles("GUEST"))
-                .withUser(User.withUsername("admin")
-                        .password(passwordEncoder().encode("admin"))
-                        .roles("GUEST","ADMIN"));
+                .dataSource(dataSource);
     }
 }
