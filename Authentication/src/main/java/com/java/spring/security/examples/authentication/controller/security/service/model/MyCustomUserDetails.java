@@ -12,11 +12,13 @@ public class MyCustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private Boolean enabled;
+    private List<GrantedAuthority> authorities;
 
-    public MyCustomUserDetails(String username,String password, Boolean enabled) {
+    public MyCustomUserDetails(String username,String password, Boolean enabled, List<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        this.authorities = authorities;
     }
 
     public MyCustomUserDetails() {
@@ -24,7 +26,7 @@ public class MyCustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_GUEST"));
+        return authorities;
     }
 
     @Override
