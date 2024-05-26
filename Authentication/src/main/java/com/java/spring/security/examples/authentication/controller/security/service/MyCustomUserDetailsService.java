@@ -4,6 +4,7 @@ import com.java.spring.security.examples.authentication.controller.security.repo
 import com.java.spring.security.examples.authentication.controller.security.repository.model.User;
 import com.java.spring.security.examples.authentication.controller.security.service.model.MyCustomUserDetails;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service(value = "my_custom_user_details_service")
 public class MyCustomUserDetailsService implements UserDetailsService {
@@ -27,7 +29,13 @@ public class MyCustomUserDetailsService implements UserDetailsService {
             return user.map(value -> new MyCustomUserDetails(
                     value.getUserName(),
                     value.getPassword(),
-                    value.getEnabled())).orElseThrow(new Supplier<RuntimeException>() {
+                    value.getEnabled(),
+                    value.getAuthorities()
+                            .stream()
+                            .map(f ->
+                                    new SimpleGrantedAuthority(f.getAuthority()))
+                            .collect(Collectors.toList())))
+                    .orElseThrow(new Supplier<RuntimeException>() {
                 @Override
                 public RuntimeException get() {
                     return new RuntimeException("user with user_name:" + username + "; was not found");

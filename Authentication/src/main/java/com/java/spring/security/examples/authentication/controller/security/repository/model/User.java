@@ -2,6 +2,8 @@ package com.java.spring.security.examples.authentication.controller.security.rep
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity(name = "User")
 @Table(name = "security_users")
 public class User {
@@ -26,6 +28,10 @@ public class User {
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Authority> authorities;
 
     public User() {
     }
@@ -60,5 +66,13 @@ public class User {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }
