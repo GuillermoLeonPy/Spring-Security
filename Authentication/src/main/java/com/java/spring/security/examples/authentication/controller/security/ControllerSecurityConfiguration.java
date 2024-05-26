@@ -57,6 +57,8 @@ public class ControllerSecurityConfiguration {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
         authBuilder.jdbcAuthentication()
-                .dataSource(dataSource);
+                .dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled from security_users where username = ?")
+                .authoritiesByUsernameQuery("select username, authority from security_authorities where username = ?");
     }
 }
