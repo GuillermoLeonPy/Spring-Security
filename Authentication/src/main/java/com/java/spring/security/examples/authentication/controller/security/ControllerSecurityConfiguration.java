@@ -1,6 +1,7 @@
 package com.java.spring.security.examples.authentication.controller.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,10 +26,10 @@ import javax.sql.DataSource;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class ControllerSecurityConfiguration {
 
-    private final DataSource dataSource;
+    private final UserDetailsService userDetailsService;
 
-    public ControllerSecurityConfiguration(@Lazy DataSource dataSource) {
-        this.dataSource = dataSource;
+    public ControllerSecurityConfiguration(@Qualifier("my_custom_user_details_service") UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
 
@@ -56,9 +58,6 @@ public class ControllerSecurityConfiguration {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
-        authBuilder.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from security_users where username = ?")
-                .authoritiesByUsernameQuery("select username, authority from security_authorities where username = ?");
+        authBuilder.userDetailsService(userDetailsService);
     }
 }
